@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการใบเสร็จ - นิติบุคคล</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Sarabun', sans-serif; }
+        .container { max-width: 1000px; margin-top: 40px; margin-bottom: 50px; }
+        .header-section { background: linear-gradient(135deg, #0d6efd 0%, #0045ad 100%); color: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2); }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .search-box { margin-top: -40px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .status-badge { font-size: 0.75rem; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+        .btn-action { border-radius: 10px; font-weight: bold; transition: all 0.2s; }
+        .table-custom thead { background-color: #f8f9fa; border-bottom: 2px solid #dee2e6; }
+        .empty-state { padding: 60px; text-align: center; color: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section text-center">
+        <h1 class="fw-bold mb-2"><i class="bi bi-file-earmark-pdf-fill me-2"></i> ระบบจัดการใบเสร็จ</h1>
+        <p class="mb-0 opacity-75">ตรวจสอบสถานะและออกไฟล์ใบเสร็จรับเงิน</p>
+    </div>
+
+    <div class="search-box mx-auto" style="max-width: 850px;">
+        <div class="row g-2">
+            <div class="col-md-8">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-primary"></i></span>
+                    <input type="number" id="roomInput" class="form-control border-start-0 ps-0" placeholder="ระบุเลขห้อง (ปล่อยว่างเพื่อดูทั้งหมด)">
+                </div>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button class="btn btn-primary btn-action w-100" onclick="fetchData()">ค้นหา</button>
+                <button class="btn btn-outline-secondary btn-action" onclick="clearAll()"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button class="btn btn-warning btn-action" onclick="runBatch()" title="สร้างที่ค้างอยู่ทั้งหมด"><i class="bi bi-lightning-charge-fill"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <div class="card p-0 overflow-hidden shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover table-custom align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4 py-3">เลขที่ใบเสร็จ</th>
+                            <th>ห้อง</th>
+                            <th>ชื่อเจ้าของ/ผู้เช่า</th>
+                            <th>วันที่บันทึก</th>
+                            <th class="text-center">สถานะ</th>
+                            <th class="text-end pe-4">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="bi bi-search display-4 d-block mb-3 opacity-25"></i>
+                                ระบุเลขห้องเพื่อค้นหาข้อมูล
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx2VRQ2TKi_zpC_K_EKwlKVAotLCWCDEgL0LIXQ0uMRQQ6Iea-sel8JNq7SdXLtYzEi/exec";
+
+    // Shortcuts: Enter = ค้นหา, ESC = ล้างข้อมูล (ซ่อนคำแนะนำแต่ทำงานได้)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === "Enter" && document.activeElement.id === "roomInput") fetchData();
+        if (e.key === "Escape") clearAll();
+    });
+
+    async function fetchData() {
+        const room = document.getElementById('roomInput').value;
+        const tableBody = document.getElementById('dataTable');
+        
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-5"><div class="spinner-border text-primary" role="status"></div><div class="mt-2 text-muted">กำลังโหลดข้อมูล...</div></td></tr>`;
+
+        try {
+            const response = await fetch(`${API_URL}?action=search&room=${room}`);
+            const data = await response.json();
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="empty-state">ไม่พบข้อมูลของห้องที่ระบุ</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = "";
+            data.forEach(item => {
+                const hasPdf = !!item.pdfUrl;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="ps-4 fw-bold text-dark">${item['เลขที่ใบเสร็จ']}</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary border">${item['ห้อง']}</span></td>
+                    <td>${item['ชื่อเจ้าของ / ผู้เช่า']}</td>
+                    <td><i class="bi bi-calendar3 me-1 text-muted"></i> ${item['dateDisplay']}</td>
+                    <td class="text-center">
+                        <span class="status-badge ${hasPdf ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}">
+                            ${hasPdf ? 'ออกไฟล์แล้ว' : 'รอการสร้าง'}
+                        </span>
+                    </td>
+                    <td class="text-end pe-4">
+                        ${hasPdf ? `<a href="${item.pdfUrl}" target="_blank" class="btn btn-sm btn-link text-success me-2 text-decoration-none"><i class="bi bi-file-earmark-check"></i> เปิดดู</a>` : ''}
+                        <button class="btn btn-sm ${hasPdf ? 'btn-outline-primary' : 'btn-primary'} btn-action px-3" onclick="generatePdf('${item['เลขที่ใบเสร็จ']}')">
+                            ${hasPdf ? 'สร้างใหม่' : 'สร้าง PDF'}
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        } catch (err) {
+            Swal.fire('Error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+            tableBody.innerHTML = `<tr><td colspan="6" class="empty-state text-danger">การเชื่อมต่อขัดข้อง</td></tr>`;
+        }
+    }
+
+    async function generatePdf(receiptNo) {
+        Swal.fire({
+            title: 'กำลังสร้างไฟล์ PDF',
+            text: 'กรุณารอสักครู่ ระบบกำลังประมวลผล...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const resp = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "generatePDF", receiptNo: receiptNo })
+            });
+            const res = await resp.json();
+            
+            if (res.success) {
+                Swal.fire({ icon: 'success', title: 'สร้างไฟล์สำเร็จ', showConfirmButton: false, timer: 1500 });
+                fetchData();
+                window.open(res.url, '_blank');
+            } else {
+                throw res.message;
+            }
+        } catch (e) {
+            Swal.fire('ล้มเหลว', 'เกิดข้อผิดพลาดในการสร้างไฟล์', 'error');
+        }
+    }
+
+    async function runBatch() {
+        const confirm = await Swal.fire({
+            title: 'สร้างใบเสร็จทั้งหมด?',
+            text: "ระบบจะสร้างไฟล์เฉพาะแถวที่ยังไม่มีข้อมูลเท่านั้น",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'ตกลง',
+            cancelButtonText: 'ยกเลิก'
+        });
+
+        if (confirm.isConfirmed) {
+            Swal.fire({ title: 'กำลังประมวลผล...', text: 'ห้ามปิดหน้าต่างนี้จนกว่าจะเสร็จสิ้น', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                const resp = await fetch(`${API_URL}?action=batch`);
+                const res = await resp.json();
+                Swal.fire('สำเร็จ', `ดำเนินการเรียบร้อย ${res.count} รายการ`, 'success');
+                fetchData();
+            } catch (e) {
+                Swal.fire('แจ้งเตือน', 'การทำงานอาจใช้เวลานานเกินไป กรุณาตรวจสอบในชีตอีกครั้ง', 'info');
+            }
+        }
+    }
+
+    function clearAll() {
+        document.getElementById('roomInput').value = "";
+        document.getElementById('dataTable').innerHTML = `<tr><td colspan="6" class="empty-state"><i class="bi bi-search display-4 d-block mb-3 opacity-25"></i> ระบุเลขห้องเพื่อค้นหาข้อมูล</td></tr>`;
+        document.getElementById('roomInput').focus();
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
