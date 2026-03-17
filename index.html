@@ -73,9 +73,10 @@
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbz-UAzOvO43YE2a5eRFyxfxdwXMkuxUwnL-lUrol-fm0SoA1gzXBx3mH1-4k_CzG7tr/exec";
+    // ⚠️ เปลี่ยนลิงก์ด้านล่างนี้ให้เป็น URL Web App ตัวล่าสุดของคุณ
+    const API_URL = "https://script.google.com/macros/s/AKfycbwr2crY1MQk2aiMfBJcg817KwZnmlWoUgbVAZwoQD8dD8EWuWttAjCUZMWYzsQKGD0_/exec";
 
-    // Shortcuts: Enter = ค้นหา, ESC = ล้างข้อมูล (ซ่อนคำแนะนำแต่ทำงานได้)
+    // Shortcuts: Enter = ค้นหา, ESC = ล้างข้อมูล
     document.addEventListener('keydown', function(e) {
         if (e.key === "Enter" && document.activeElement.id === "roomInput") fetchData();
         if (e.key === "Escape") clearAll();
