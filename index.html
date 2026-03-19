@@ -2,21 +2,137 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ตรวจสอบใบเสร็จ - เจริญกรุง คอนโดมิเนียม 3</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Sarabun', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
-        .resident-container { flex: 1; max-width: 500px; margin: 40px auto; padding: 20px; width: 100%; }
-        .header-box { background: white; padding: 40px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
-        .condo-logo { max-width: 220px; width: 100%; height: auto; margin-bottom: 25px; }
-        .receipt-card { background: white; padding: 20px; border-radius: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #28a745; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        :root {
+            /* กำหนดฐานขนาดตัวอักษรหลัก เพื่อใช้คำนวณ rem */
+            font-size: 16px; 
+        }
+
+        body { 
+            background-color: #f8f9fa; 
+            font-family: 'Sarabun', sans-serif; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* เพิ่ม Line-height เพื่อให้ตัวหนังสืออ่านง่ายขึ้น ไม่ติดกันเกินไป */
+            line-height: 1.6; 
+            color: #333;
+        }
+
+        .resident-container { 
+            flex: 1;
+            max-width: 540px; /* ขยายขนาด Container เล็กน้อย */
+            margin: 2rem auto; /* ใช้ rem สำหรับระยะห่าง */
+            padding: 0 1rem; 
+            width: 100%;
+        }
+
+        .header-box { 
+            background: white; 
+            padding: 3rem 1.5rem; /* เพิ่ม Padding บนล่าง */
+            border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            text-align: center; 
+        }
+        
+        /* โลโก้ขนาดใหญ่ตามที่นายสั่ง */
+        .condo-logo { 
+            max-width: 240px; /* เพิ่มขนาดอีกนิดให้เด่นชัด */
+            width: 100%;
+            height: auto;
+            margin-bottom: 2rem; 
+        }
+        
+        /* หัวข้อหลัก ใช้หน่วย rem เพื่อให้ขยายตามหน้าจอ */
+        .main-title {
+            font-size: 1.75rem; /* ประมาณ 28px */
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub-title {
+            font-size: 1rem; /* ประมาณ 16px */
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+
+        /* ปรับปรุงช่องกรอกข้อมูลให้ใหญ่ขึ้น */
+        .form-control-lg { 
+            font-size: 1.25rem; /* ขยายขนาดตัวหนังสือในช่องกรอก */
+            border-radius: 15px; 
+            border: 2px solid #dee2e6;
+            padding: 0.75rem 1rem;
+        }
+        
+        /* การ์ดใบเสร็จ ปรับหน่วยเป็น rem */
+        .receipt-card { 
+            background: white; 
+            padding: 1.5rem; 
+            border-radius: 15px; 
+            margin-top: 1rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-left: 6px solid #28a745; /* เพิ่มความหนาเส้นสีเขียว */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            transition: transform 0.2s; 
+        }
         .receipt-card:hover { transform: scale(1.02); }
-        .btn-search { border-radius: 12px; font-weight: bold; padding: 12px; }
-        .btn-clear { border-radius: 12px; font-weight: bold; padding: 12px; color: #6c757d; background-color: #f1f3f5; border: 1px solid #dee2e6; }
-        .footer { padding: 20px; text-align: center; font-size: 0.85rem; color: #6c757d; margin-top: auto; }
+        
+        /* ตัวหนังสือในการ์ด */
+        .receipt-period {
+            font-size: 1.15rem; /* ขยายขนาดชื่อเดือน */
+            font-weight: 600;
+            color: #212529;
+        }
+        .receipt-no {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* สไตล์ปุ่มให้ใหญ่ขึ้นและเด่นชัด */
+        .btn-search { 
+            border-radius: 12px; 
+            font-weight: 600; 
+            padding: 0.85rem; /* เพิ่ม padding */
+            font-size: 1.1rem;
+        }
+        .btn-clear { 
+            border-radius: 12px; 
+            font-weight: 600; 
+            padding: 0.85rem; 
+            font-size: 1.1rem;
+            color: #6c757d; 
+            background-color: #f1f3f5; 
+            border: 1px solid #dee2e6; 
+        }
+        .btn-clear:hover { background-color: #e9ecef; }
+        
+        /* ปุ่มดาวน์โหลดไฟล์ในการ์ด */
+        .btn-download {
+            font-size: 0.95rem;
+            padding: 0.5rem 1.25rem;
+        }
+
+        .footer {
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem; /* ปรับขนาด Footer ให้พอดี */
+            color: #6c757d;
+            background-color: transparent;
+            margin-top: auto;
+            border-top: 1px solid #eee; /* เพิ่มเส้นแบ่งจางๆ */
+        }
+
+        /* ปรับแต่ง Spinner และ Alert */
+        .spinner-border { width: 2.5rem; height: 2.5rem; }
+        .alert { border-radius: 15px; font-size: 1rem; padding: 1.25rem; }
     </style>
 </head>
 <body>
@@ -26,16 +142,31 @@
             <a href="https://pic.in.th/image/Untitled-design.82jiNR" target="_blank">
                 <img src="https://img1.pic.in.th/images/Untitled-design01481aab804c105d.png" alt="Condo Logo" class="condo-logo">
             </a>
-            <h4 class="fw-bold">ตรวจสอบใบเสร็จรับเงิน</h4>
+            
+            <div class="main-title">ตรวจสอบใบเสร็จรับเงิน</div>
+            <p class="sub-title">กรอกหมายเลขห้องเพื่อค้นหาใบเสร็จล่าสุดของท่าน</p>
+            
             <div class="mt-4">
-                <input type="number" id="roomNo" class="form-control form-control-lg text-center mb-3" style="border-radius: 15px; border: 2px solid #dee2e6;" placeholder="ระบุเลขห้อง (เช่น 101)" autocomplete="off">
+                <input type="number" id="roomNo" class="form-control form-control-lg text-center mb-4" 
+                       placeholder="ระบุเลขห้อง (เช่น 101)" autocomplete="off">
+                
                 <div class="row g-2">
-                    <div class="col-8"><button class="btn btn-primary btn-search w-100 shadow-sm" onclick="searchReceipts()"><i class="bi bi-search"></i> ค้นหา</button></div>
-                    <div class="col-4"><button class="btn btn-clear w-100" onclick="clearSearch()">ล้าง</button></div>
+                    <div class="col-8">
+                        <button class="btn btn-primary btn-search w-100 shadow-sm" onclick="searchReceipts()">
+                            <i class="bi bi-search"></i> ค้นหา
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-clear w-100" onclick="clearSearch()">
+                            ล้าง
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="resultsArea" class="mt-4"></div>
+
+        <div id="resultsArea" class="mt-4">
+            </div>
     </div>
 
     <div class="footer">
@@ -43,19 +174,29 @@
     </div>
 
     <script>
+        // URL API เดิมของนาย
         const API_URL = "https://script.google.com/macros/s/AKfycbyfjoIoU0viOW4_4NtCmqZ1wLxSYQPQRdAZv7cQIf6-lCMLbDjfpYHYZ28FkSojBeivJA/exec";
         const inputField = document.getElementById('roomNo');
         const resultsArea = document.getElementById('resultsArea');
 
         // ฟังก์ชันล้างข้อมูล
-        function clearSearch() { inputField.value = ''; resultsArea.innerHTML = ''; inputField.focus(); }
+        function clearSearch() {
+            inputField.value = '';
+            resultsArea.innerHTML = '';
+            inputField.focus();
+        }
 
-        inputField.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); searchReceipts(); }
-            else if (e.key === 'Escape') { clearSearch(); }
+        // ดักจับคีย์บอร์ด (Enter / Escape) โดยไม่แจ้งผู้ใช้
+        inputField.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                searchReceipts();
+            } else if (event.key === 'Escape') {
+                clearSearch();
+            }
         });
 
-        // --- LOGIC ใหม่: แปลงเลขที่ใบเสร็จเป็น เดือนย้อนหลัง ---
+        // --- Logic: แปลงเลขที่ใบเสร็จเป็น เดือนย้อนหลังตามสเปกเป๊ะๆ ---
         function formatThaiPeriod(receiptNo) {
             if (!receiptNo || receiptNo.length < 4) return "ใบเสร็จรับเงิน";
             
@@ -65,12 +206,13 @@
             let monthVal = parseInt(receiptNo.substring(2, 4)); // ดึง '03' -> 3
             
             // ย้อนหลัง 1 เดือน
-            let targetMonthIdx = monthVal - 2; // -2 เพราะ index เริ่มที่ 0 และต้องถอยอีก 1 (3-1-1 = 1 คือ กุมภาพันธ์)
+            let targetMonthIdx = monthVal - 2; // (3 - 1 - 1 = 1 คือ กุมภาพันธ์)
             let targetYear = year;
 
+            // Handle กรณีเดือนมกราคม ถอยไปจะเป็นธันวาคมปีก่อนหน้า
             if (targetMonthIdx < 0) {
-                targetMonthIdx = 11; // มกราคม (01) ถอยไปจะเป็น ธันวาคม (12)
-                targetYear = (parseInt(year) - 1).toString(); // ลดปีลง 1 ถ้าต้องการ
+                targetMonthIdx = 11; // ธันวาคม
+                targetYear = (parseInt(year) - 1).toString(); // ลดปีลง 1 (ถ้าต้องการซ่อนปี ให้คอมเม้นบรรทัดนี้ออก)
             }
 
             return `ใบเสร็จเดือน${months[targetMonthIdx]}${targetYear}`;
@@ -79,37 +221,43 @@
         async function searchReceipts() {
             const room = inputField.value;
             if(!room) return;
-            resultsArea.innerHTML = '<div class="text-center mt-4"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted small">กำลังค้นหา...</p></div>';
+            
+            resultsArea.innerHTML = '<div class="text-center mt-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-3 text-muted">กำลังค้นหาข้อมูล...</p></div>';
 
             try {
+                // เรียก API
                 const resp = await fetch(`${API_URL}?action=getResidentData&room=${room}`);
                 const data = await resp.json();
 
+                // กรณีไม่พบข้อมูล
                 if (!data || data.length === 0) {
-                    resultsArea.innerHTML = '<div class="alert alert-warning text-center" style="border-radius:15px;">ไม่พบข้อมูลใบเสร็จในระบบ</div>';
+                    resultsArea.innerHTML = '<div class="alert alert-warning text-center shadow-sm" style="border: none; background-color: #fff3cd; color: #856404;"><i class="bi bi-exclamation-triangle"></i> ไม่พบข้อมูลใบเสร็จในระบบ<br><small>หากท่านเพิ่งชำระเงิน กรุณารอนิติบุคคลดำเนินการ</small></div>';
                     return;
                 }
 
-                resultsArea.innerHTML = '<p class="text-muted mb-2 ps-2 small">รายการล่าสุด:</p>';
+                // กรณีพบข้อมูล
+                resultsArea.innerHTML = '<p class="text-muted mb-2 ps-2 small">พบรายการล่าสุด:</p>';
                 data.forEach(item => {
-                    // เรียกใช้ Logic แปลงชื่อเดือนจาก receiptNo
+                    // เรียก Logic แปลงชื่อเดือนย้อนหลัง
                     const displayTitle = formatThaiPeriod(item.receiptNo);
                     
                     const div = document.createElement('div');
                     div.className = 'receipt-card';
                     div.innerHTML = `
                         <div>
-                            <div class="fw-bold" style="color: #212529;">${displayTitle}</div>
-                            <small class="text-muted">เลขที่: ${item.receiptNo}</small>
+                            <div class="receipt-period">${displayTitle}</div>
+                            <small class="receipt-no">เลขที่: ${item.receiptNo || '-'}</small>
                         </div>
                         <div>
-                            ${item.pdfUrl ? `<a href="${item.pdfUrl}" target="_blank" class="btn btn-success btn-sm rounded-pill px-3 shadow-sm"><i class="bi bi-download"></i> ดูไฟล์</a>` : '<span class="badge bg-light text-muted p-2">รอไฟล์</span>'}
+                            ${item.pdfUrl ? `<a href="${item.pdfUrl}" target="_blank" class="btn btn-success btn-download rounded-pill shadow-sm"><i class="bi bi-file-earmark-pdf"></i> ดูไฟล์</a>` : '<span class="badge bg-light text-muted p-2" style="border-radius: 10px; font-size:0.85rem;"><i class="bi bi-hourglass-split"></i> รอไฟล์</span>'}
                         </div>
                     `;
                     resultsArea.appendChild(div);
                 });
             } catch (e) {
-                resultsArea.innerHTML = '<div class="alert alert-danger text-center" style="border-radius:15px;">ระบบขัดข้อง</div>';
+                // กรณีระบบขัดข้อง
+                resultsArea.innerHTML = '<div class="alert alert-danger text-center shadow-sm" style="border: none; background-color: #f8d7da; color: #721c24;"><i class="bi bi-x-circle"></i> ระบบขัดข้อง กรุณาลองใหม่ภายหลัง</div>';
+                console.error(e);
             }
         }
     </script>
