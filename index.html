@@ -3,66 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ตรวจสอบใบเสร็จ - เจริญกรุง คอนโดมิเนียม 3</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Smart Receipt - Charoen Krung 3</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <style>
-        :root { font-size: 16px; --gold: #d4af37; }
-        body { background-color: #f4f6f9; font-family: 'Sarabun', sans-serif; display: flex; flex-direction: column; min-height: 100vh; color: #333; }
-        .resident-container { flex: 1; max-width: 500px; margin: 2rem auto; padding: 0 1.25rem; width: 100%; }
-        
-        /* ส่วนหัว */
-        .header-box { 
-            background: white; padding: 2.5rem 1.5rem; border-radius: 30px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center;
-            border-bottom: 4px solid var(--gold);
+        :root {
+            --primary-glow: #f59e0b;
+            --accent-color: #ffd700;
+            --bg-dark: #07090e;
+            --bg-dark-lighter: #111827;
+            --card-bg: rgba(20, 25, 35, 0.65);
+            --glass-border: rgba(255, 215, 0, 0.15);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
         }
-        .condo-logo { max-width: 200px; width: 100%; height: auto; margin-bottom: 1.5rem; }
-        .main-title { font-size: 1.6rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; }
-        .sub-title { font-size: 0.95rem; color: #7f8c8d; margin-bottom: 2rem; }
 
-        /* ช่องค้นหา */
-        .form-control-lg { 
-            font-size: 1.3rem; border-radius: 18px; border: 2px solid #eee;
-            background-color: #fdfdfd; text-align: center; transition: 0.3s;
+        /* ป้องกันการคลุมดำเลือกข้อความในบางจุดที่สำคัญ */
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Sarabun', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
         }
-        .form-control-lg:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); }
-        .btn-search { border-radius: 15px; font-weight: 700; padding: 0.8rem; background: #1a1a1a; border: none; color: white; }
-        .btn-search:hover { background: #333; transform: translateY(-1px); }
-        .btn-clear { border-radius: 15px; font-weight: 600; padding: 0.8rem; color: #888; background: #eee; border: none; }
 
-        /* การ์ดใบเสร็จ */
-        .receipt-card { 
-            background: white; padding: 1.25rem 1.5rem; border-radius: 20px; 
-            margin-top: 1rem; display: flex; justify-content: space-between; align-items: center; 
-            border-left: 5px solid #28a745; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            animation: slideUp 0.4s ease-out forwards;
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(180, 83, 9, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at center, var(--bg-dark-lighter) 0%, var(--bg-dark) 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43 23c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-11-23c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-43-37c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM13 74c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm29-38c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-28 6c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm34-8c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-4 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM69 43c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'/%3E%3C/g%3E%3C/svg%3E");
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-attachment: fixed;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .receipt-period { font-size: 1.1rem; font-weight: 700; color: #2c3e50; }
-        .receipt-no { font-size: 0.85rem; color: #95a5a6; font-family: monospace; }
-        .btn-download { font-size: 0.9rem; padding: 0.5rem 1.2rem; font-weight: 600; border-radius: 12px; }
 
-        .footer { padding: 2rem; text-align: center; font-size: 0.8rem; color: #bdc3c7; margin-top: auto; }
-        .spinner-border { color: var(--gold); }
+        .container {
+            max-width: 440px; 
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem;
+            flex: 1;
+        }
+
+        /* 🚩 BRANDING: ปรับช่องไฟตามโจทย์ */
+        .brand-section {
+            text-align: center;
+            margin-bottom: 1.8rem; /* ลดช่องไฟระว่างข้อความกับช่องค้นหา */
+        }
+
+        .condo-logo {
+            width: 260px;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
+            margin-bottom: 0.8rem;
+            /* ป้องกันการคลิกหรือลากรูปโลโก้ */
+            pointer-events: none; 
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .main-title {
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            line-height: 1;
+            background: linear-gradient(to right, #ffffff, #ffe082);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        /* ระบบตรวจสอบใบเสร็จออนไลน์ - เพิ่มช่องไฟจากตัวบน */
+        .brand-section p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 20px; /* เพิ่มช่องไฟจาก E-RECEIPT */
+            letter-spacing: 1.5px;
+            font-weight: 300; /* ใช้ฟอนต์บางลงเพื่อความหรูหรา */
+        }
+
+        /* 🚩 SEARCH CARD */
+        .search-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .form-control {
+            background: rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(255, 215, 0, 0.1) !important;
+            border-radius: 15px !important;
+            color: #fff !important;
+            padding: 0.9rem !important;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color) !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1) !important;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #ffd700 100%);
+            background-size: 200% auto;
+            border: none;
+            border-radius: 15px;
+            padding: 0.85rem;
+            font-weight: 700;
+            color: #000;
+            width: 100%;
+            font-size: 0.95rem;
+            transition: 0.5s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-secondary-custom {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            border-radius: 15px;
+            padding: 0.85rem;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        /* รายการใบเสร็จ */
+        .results-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+            padding-left: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .receipt-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.15rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-view-pdf {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--accent-color);
+            padding: 0.55rem 1.1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.2rem 1rem;
+            font-size: 0.75rem;
+            color: #4b5563;
+            border-top: 1px solid rgba(255, 215, 0, 0.05);
+            margin-top: auto;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <div class="container">
+        <div class="brand-section">
+            <img src="https://img1.pic.in.th/images/logo310c09ae65f63ac1d.png" alt="logo3" class="condo-logo" draggable="false">
+            <div class="main-title">E-RECEIPT</div>
+            <p>ระบบตรวจสอบใบเสร็จออนไลน์</p>
+        </div>
 
-    <div class="resident-container">
-        <div class="header-box">
-            <img src="https://img1.pic.in.th/images/Untitled-design01481aab804c105d.png" alt="Condo Logo" class="condo-logo">
-            <div class="main-title">ตรวจสอบใบเสร็จ</div>
-            <p class="sub-title">กรอกหมายเลขห้องของท่านเพื่อดูประวัติ</p>
-            
-            <div class="mt-4">
-                <input type="number" id="roomNo" class="form-control form-control-lg mb-3" placeholder="ระบุเลขห้อง (เช่น 16)" autocomplete="off">
-                <div class="row g-2">
-                    <div class="col-8"><button class="btn btn-primary btn-search w-100" onclick="searchReceipts()"><i class="bi bi-search me-2"></i>ค้นหา</button></div>
-                    <div class="col-4"><button class="btn btn-clear w-100" onclick="clearSearch()">ล้าง</button></div>
-                </div>
+        <div class="search-card">
+            <div class="mb-3">
+                <input type="number" id="roomNo" class="form-control" placeholder="ระบุเลขห้อง" autocomplete="off">
+            </div>
+            <div style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 10px;">
+                <button class="btn-main" onclick="searchReceipts()">
+                    <i class="bi bi-search me-1"></i>ค้นหา
+                </button>
+                <button class="btn-secondary-custom" onclick="clearSearch()">ล้าง</button>
             </div>
         </div>
 
@@ -73,7 +218,18 @@
         © 2026 Charoen Krung Condominium 3 | ระบบตรวจสอบใบเสร็จออนไลน์
     </div>
 
-   <script>
+    <script>
+        // 🚩 ป้องกันการกดคลิกขวา และคำสั่งลัดที่ใช้ในการก๊อปปี้
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false; // F12
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false; // ป้องกัน Ctrl + S
+        }
+
         const API_URL = "https://script.google.com/macros/s/AKfycbwjcA4Cc88COnMDbTmQgl1dBK9ZU2NsSPsLBnAzTmY0h7T6jUZLMg5znjcPSrAmJ62mDg/exec";
         const inputField = document.getElementById('roomNo');
         const resultsArea = document.getElementById('resultsArea');
@@ -86,73 +242,72 @@
 
         inputField.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') searchReceipts();
-            if (e.key === 'Escape') clearSearch();
         });
 
-        // 🚩 ฟังก์ชันแปลงเลขที่ใบเสร็จ (6903...) เป็น ใบเสร็จเดือนมีนาคม 2569
         function formatThaiPeriod(receiptNo) {
             if (!receiptNo || receiptNo.length < 4) return "ใบเสร็จรับเงิน";
-            
             const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-            
-            // ตัดเลขจาก 6903...
-            let yearPart = receiptNo.substring(0, 2); // 69
-            let monthPart = parseInt(receiptNo.substring(2, 4)); // 03 -> 3
-            
-            // Logic: ปกติใบเสร็จเดือน 3 คือค่าใช้จ่ายของเดือน 2 (ย้อนหลัง 1 เดือน)
+            let yearPart = receiptNo.substring(0, 2);
+            let monthPart = parseInt(receiptNo.substring(2, 4));
             let targetMonthIdx = monthPart - 2; 
             let targetYear = parseInt("25" + yearPart);
-
-            // กรณีเดือนมกราคม (01) ถอยไปจะเป็นธันวาคมปีก่อนหน้า
             if (targetMonthIdx < 0) {
-                targetMonthIdx = 11; // ธันวาคม
+                targetMonthIdx = 11;
                 targetYear -= 1; 
             }
-
-            return `ใบเสร็จเดือน${months[targetMonthIdx]} ${targetYear}`;
+            return `ประจำเดือน${months[targetMonthIdx]} ${targetYear}`;
         }
 
         async function searchReceipts() {
             const room = inputField.value.trim();
             if(!room) return;
             
-            resultsArea.innerHTML = '<div class="text-center mt-5"><div class="spinner-border" role="status"></div><p class="mt-3 text-muted">กำลังค้นหาข้อมูล...</p></div>';
+            resultsArea.innerHTML = `
+                <div style="text-align:center; margin-top:2.5rem;">
+                    <div style="width:30px; height:30px; border:3px solid rgba(255,215,0,0.1); border-top:3px solid var(--accent-color); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
+                    <p style="color:var(--text-muted); font-size:0.8rem; margin-top:1.2rem;">กำลังเรียกข้อมูล...</p>
+                </div>`;
 
             try {
                 const resp = await fetch(`${API_URL}?action=getResidentData&room=${room}`);
                 const data = await resp.json();
 
                 if (!data || data.length === 0) {
-                    resultsArea.innerHTML = '<div class="alert alert-light text-center shadow-sm" style="border-radius:20px; color:#95a5a6;"><i class="bi bi-search me-2"></i>ไม่พบข้อมูลใบเสร็จของห้อง ' + room + '</div>';
+                    resultsArea.innerHTML = `
+                        <div style="text-align:center; color:var(--text-muted); padding:2.2rem; background:var(--card-bg); border-radius:20px; border:1px solid var(--glass-border); font-size:0.85rem;">
+                            ไม่พบข้อมูลสำหรับห้อง ${room}
+                        </div>`;
                     return;
                 }
 
-                resultsArea.innerHTML = '<p class="text-muted mb-3 ps-2" style="font-size:0.8rem; font-weight:600;">รายการล่าสุดของท่าน</p>';
-                data.forEach(item => {
+                resultsArea.innerHTML = '<p class="results-label">รายการล่าสุด</p>';
+                data.forEach((item, index) => {
                     const div = document.createElement('div');
-                    div.className = 'receipt-card';
+                    div.className = 'receipt-item';
+                    div.style.animationDelay = (index * 0.1) + 's';
                     
-                    // 🚩 ใช้ฟังก์ชันแปลงเลขที่ใบเสร็จเป็นชื่อเดือน
                     const displayTitle = formatThaiPeriod(item.receiptNo);
                     
                     div.innerHTML = `
                         <div>
-                            <div class="receipt-period">${displayTitle}</div>
-                            <span class="receipt-no">เลขที่: ${item.receiptNo}</span>
+                            <h4 style="margin:0; font-size:1.05rem; color:var(--accent-color); font-weight:700;">${displayTitle}</h4>
+                            <p style="margin: 3px 0 0 0; font-size:0.8rem; color:var(--text-muted); font-family: monospace;">เลขที่: ${item.receiptNo}</p>
                         </div>
                         <div>
                             ${item.pdfUrl ? 
-                                `<a href="${item.pdfUrl}" target="_blank" class="btn btn-success btn-download"><i class="bi bi-file-earmark-pdf me-1"></i>ดูไฟล์</a>` : 
-                                `<span class="badge bg-light text-muted p-2" style="font-weight:400; border-radius:8px;">รอไฟล์ PDF</span>`
+                                `<a href="${item.pdfUrl}" target="_blank" class="btn-view-pdf">ดูไฟล์ PDF</a>` : 
+                                `<span style="color:#4b5563; font-size:0.8rem;">รอไฟล์</span>`
                             }
                         </div>
                     `;
                     resultsArea.appendChild(div);
                 });
             } catch (e) {
-                resultsArea.innerHTML = '<div class="alert alert-danger text-center shadow-sm" style="border-radius:20px;">ระบบขัดข้อง กรุณาลองใหม่ภายหลัง</div>';
+                resultsArea.innerHTML = `<div style="color:#f87171; text-align:center; font-size:0.85rem;">ระบบขัดข้อง กรุณาลองใหม่</div>`;
             }
         }
     </script>
+
+    <style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
 </body>
 </html>
