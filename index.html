@@ -20,7 +20,6 @@
             --text-muted: #9ca3af;
         }
 
-        /* ป้องกันการคลุมดำเลือกข้อความในบางจุดที่สำคัญ */
         * { 
             box-sizing: border-box; 
             font-family: 'Sarabun', sans-serif; 
@@ -50,17 +49,15 @@
             flex: 1;
         }
 
-        /* 🚩 BRANDING: ปรับช่องไฟตามโจทย์ */
         .brand-section {
             text-align: center;
-            margin-bottom: 1.8rem; /* ลดช่องไฟระว่างข้อความกับช่องค้นหา */
+            margin-bottom: 2.8rem; 
         }
 
         .condo-logo {
             width: 260px;
             filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
-            margin-bottom: 0.8rem;
-            /* ป้องกันการคลิกหรือลากรูปโลโก้ */
+            margin-bottom: 0.5rem;
             pointer-events: none; 
             user-select: none;
             -webkit-user-drag: none;
@@ -69,7 +66,7 @@
         .main-title {
             font-size: 2.1rem;
             font-weight: 700;
-            letter-spacing: 3px;
+            letter-spacing: 2.5px;
             line-height: 1;
             background: linear-gradient(to right, #ffffff, #ffe082);
             -webkit-background-clip: text;
@@ -77,16 +74,14 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* ระบบตรวจสอบใบเสร็จออนไลน์ - เพิ่มช่องไฟจากตัวบน */
         .brand-section p {
             color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-top: 20px; /* เพิ่มช่องไฟจาก E-RECEIPT */
-            letter-spacing: 1.5px;
-            font-weight: 300; /* ใช้ฟอนต์บางลงเพื่อความหรูหรา */
+            font-size: 0.88rem;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            font-weight: 400;
         }
 
-        /* 🚩 SEARCH CARD */
         .search-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px) saturate(180%);
@@ -96,6 +91,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
 
+        /* ส่วนกรอกตัวเลข */
         .form-control {
             background: rgba(0, 0, 0, 0.4) !important;
             border: 1px solid rgba(255, 215, 0, 0.1) !important;
@@ -111,7 +107,11 @@
         .form-control:focus {
             outline: none;
             border-color: var(--accent-color) !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1) !important;
+        }
+
+        /* 🚩 ระยะห่าง mb-4 (ให้ช่องไฟระหว่าง Input กับ ปุ่มกด) */
+        .mb-4-custom {
+            margin-bottom: 1.5rem !important; 
         }
 
         .btn-main {
@@ -140,15 +140,13 @@
             transition: 0.3s;
         }
 
-        /* รายการใบเสร็จ */
         .results-label {
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             margin-bottom: 0.8rem;
             padding-left: 0.5rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .receipt-item {
@@ -161,7 +159,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1.5rem; 
             animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .receipt-info {
+            flex: 1;
+            min-width: 0;
         }
 
         @keyframes fadeIn {
@@ -179,20 +183,22 @@
             font-size: 0.85rem;
             font-weight: 600;
             transition: 0.3s;
+            white-space: nowrap;
         }
 
         .footer {
             text-align: center;
             padding: 2.2rem 1rem;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #4b5563;
             border-top: 1px solid rgba(255, 215, 0, 0.05);
             margin-top: auto;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div class="container">
+<body oncontextmenu="return false;"> 
+    <div class="container">
         <div class="brand-section">
             <img src="https://img1.pic.in.th/images/logo310c09ae65f63ac1d.png" alt="logo3" class="condo-logo" draggable="false">
             <div class="main-title">E-RECEIPT</div>
@@ -200,7 +206,7 @@
         </div>
 
         <div class="search-card">
-            <div class="mb-3">
+            <div class="mb-4-custom">
                 <input type="number" id="roomNo" class="form-control" placeholder="ระบุเลขห้อง" autocomplete="off">
             </div>
             <div style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 10px;">
@@ -219,15 +225,15 @@
     </div>
 
     <script>
-        // 🚩 ป้องกันการกดคลิกขวา และคำสั่งลัดที่ใช้ในการก๊อปปี้
+        // Security: ป้องกันการคลิกขวาและปุ่มลัด
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false; // F12
+            if(e.keyCode == 123) return false;
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
             if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
             if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false; // ป้องกัน Ctrl + S
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false;
         }
 
         const API_URL = "https://script.google.com/macros/s/AKfycbwjcA4Cc88COnMDbTmQgl1dBK9ZU2NsSPsLBnAzTmY0h7T6jUZLMg5znjcPSrAmJ62mDg/exec";
@@ -289,7 +295,7 @@
                     const displayTitle = formatThaiPeriod(item.receiptNo);
                     
                     div.innerHTML = `
-                        <div>
+                        <div class="receipt-info">
                             <h4 style="margin:0; font-size:1.05rem; color:var(--accent-color); font-weight:700;">${displayTitle}</h4>
                             <p style="margin: 3px 0 0 0; font-size:0.8rem; color:var(--text-muted); font-family: monospace;">เลขที่: ${item.receiptNo}</p>
                         </div>
