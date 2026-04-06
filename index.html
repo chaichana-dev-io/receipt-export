@@ -18,47 +18,79 @@
             --glass-border: rgba(255, 215, 0, 0.15);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
+            --purple-color: #800080;
         }
 
-        * { 
-            box-sizing: border-box; 
-            font-family: 'Sarabun', sans-serif; 
+        * {
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(180, 83, 9, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at center, var(--bg-dark-lighter) 0%, var(--bg-dark) 100%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43 23c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-11-23c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-43-37c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM13 74c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm29-38c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-28 6c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm34-8c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-4 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM69 43c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z'/%3E%3C/g%3E%3C/svg%3E");
-            color: var(--text-main);
             margin: 0;
             min-height: 100vh;
+            color: var(--text-main);
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            position: relative;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.08), transparent 35%),
+                radial-gradient(circle at 80% 80%, rgba(128, 0, 128, 0.10), transparent 35%),
+                radial-gradient(circle at 50% 10%, rgba(245, 158, 11, 0.06), transparent 30%),
+                linear-gradient(135deg, #04060b 0%, #0b0f1a 45%, #06080d 100%);
             background-attachment: fixed;
         }
 
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -40%;
+            background:
+                radial-gradient(circle, rgba(255, 215, 0, 0.10) 0%, transparent 55%),
+                radial-gradient(circle, rgba(128, 0, 128, 0.08) 0%, transparent 50%);
+            animation: glowMove 16s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+            opacity: 0.04;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes glowMove {
+            0%   { transform: translate(-10%, -10%) rotate(0deg); }
+            50%  { transform: translate(10%, 10%) rotate(180deg); }
+            100% { transform: translate(-10%, -10%) rotate(360deg); }
+        }
+
         .container {
-            max-width: 440px; 
+            max-width: 440px;
             margin: 0 auto;
             padding: 1.5rem 1.2rem;
             flex: 1;
+            position: relative;
+            z-index: 1;
         }
 
         .brand-section {
             text-align: center;
-            margin-bottom: 2.8rem; 
+            margin-bottom: 2.8rem;
         }
 
         .condo-logo {
             width: 260px;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.25));
+            filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.28));
             margin-bottom: 0.5rem;
-            pointer-events: none; 
+            pointer-events: none;
             user-select: none;
             -webkit-user-drag: none;
         }
@@ -68,10 +100,10 @@
             font-weight: 700;
             letter-spacing: 2.5px;
             line-height: 1;
-            background: linear-gradient(to right, #ffffff, #ffe082);
+            background: linear-gradient(to right, #ffffff, #ffe082, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.55));
         }
 
         .brand-section p {
@@ -83,18 +115,21 @@
         }
 
         .search-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid var(--glass-border);
+            background: rgba(18, 22, 32, 0.62);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 215, 0, 0.12);
             border-radius: 28px;
             padding: 1.8rem 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.72),
+                inset 0 1px 0 rgba(255,255,255,0.03),
+                0 0 0 1px rgba(255,215,0,0.03);
         }
 
-        /* ส่วนกรอกตัวเลข */
         .form-control {
-            background: rgba(0, 0, 0, 0.4) !important;
-            border: 1px solid rgba(255, 215, 0, 0.1) !important;
+            background: rgba(0, 0, 0, 0.38) !important;
+            border: 1px solid rgba(255, 215, 0, 0.10) !important;
             border-radius: 15px !important;
             color: #fff !important;
             padding: 0.9rem !important;
@@ -102,20 +137,24 @@
             font-size: 1.25rem;
             font-weight: 500;
             transition: 0.3s;
+            backdrop-filter: blur(8px);
+            width: 100%;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--accent-color) !important;
+            box-shadow:
+                0 0 0 3px rgba(255, 215, 0, 0.22),
+                0 0 25px rgba(255, 215, 0, 0.08);
         }
 
-        /* 🚩 ระยะห่าง mb-4 (ให้ช่องไฟระหว่าง Input กับ ปุ่มกด) */
         .mb-4-custom {
-            margin-bottom: 1.5rem !important; 
+            margin-bottom: 1.5rem !important;
         }
 
         .btn-main {
-            background: linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #ffd700 100%);
+            background: linear-gradient(135deg, #b45309 0%, #f59e0b 45%, #ffd700 100%);
             background-size: 200% auto;
             border: none;
             border-radius: 15px;
@@ -124,20 +163,34 @@
             color: #000;
             width: 100%;
             font-size: 0.95rem;
-            transition: 0.5s;
+            transition: 0.35s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: 0 10px 24px rgba(245, 158, 11, 0.18);
+            cursor: pointer;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(245, 158, 11, 0.28);
         }
 
         .btn-secondary-custom {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 215, 0, 0.08);
             color: var(--text-muted);
             border-radius: 15px;
             padding: 0.85rem;
             width: 100%;
             font-size: 0.9rem;
             transition: 0.3s;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+
+        .btn-secondary-custom:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
         }
 
         .results-label {
@@ -150,40 +203,37 @@
         }
 
         .receipt-item {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            background: rgba(18, 22, 32, 0.58);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 215, 0, 0.10);
             border-radius: 20px;
             padding: 1.15rem;
             margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1.5rem; 
+            gap: 1.5rem;
             animation: fadeIn 0.5s ease-out forwards;
+            box-shadow:
+                0 10px 25px rgba(0,0,0,0.25),
+                inset 0 1px 0 rgba(255,255,255,0.02);
         }
 
         .receipt-info {
-            flex: 1;
             min-width: 0;
+            flex: 1;
+        }
+
+        .receipt-info h4,
+        .receipt-info p {
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .btn-view-pdf {
-            background: rgba(255, 215, 0, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: var(--accent-color);
-            padding: 0.55rem 1.1rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.3s;
-            white-space: nowrap;
         }
 
         .footer {
@@ -194,10 +244,65 @@
             border-top: 1px solid rgba(255, 215, 0, 0.05);
             margin-top: auto;
             letter-spacing: 0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-view-pdf {
+            background: linear-gradient(135deg, #6b21a8, #800080, #9333ea);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+            padding: 0.55rem 1.1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 8px 18px rgba(128, 0, 128, 0.22);
+            display: inline-block;
+        }
+
+        .btn-view-pdf:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(128, 0, 128, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.25rem 1rem;
+            }
+
+            .condo-logo {
+                width: 220px;
+            }
+
+            .main-title {
+                font-size: 1.85rem;
+            }
+
+            .search-card {
+                padding: 1.4rem 1.1rem;
+            }
+
+            .receipt-item {
+                gap: 0.9rem;
+                padding: 1rem;
+            }
+
+            .btn-view-pdf {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> 
+<body oncontextmenu="return false;">
     <div class="container">
         <div class="brand-section">
             <img src="https://img1.pic.in.th/images/logo310c09ae65f63ac1d.png" alt="logo3" class="condo-logo" draggable="false">
@@ -225,16 +330,44 @@
     </div>
 
     <script>
-        // Security: ป้องกันการคลิกขวาและปุ่มลัด
         document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false;
-        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                clearSearch();
+                return;
+            }
+
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'C'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 'J'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.ctrlKey && e.keyCode === 'S'.charCodeAt(0)) {
+                e.preventDefault();
+                return false;
+            }
+        });
 
         const API_URL = "https://script.google.com/macros/s/AKfycbwjcA4Cc88COnMDbTmQgl1dBK9ZU2NsSPsLBnAzTmY0h7T6jUZLMg5znjcPSrAmJ62mDg/exec";
         const inputField = document.getElementById('roomNo');
@@ -246,74 +379,94 @@
             inputField.focus();
         }
 
-        inputField.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') searchReceipts();
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                searchReceipts();
+            }
         });
 
         function formatThaiPeriod(receiptNo) {
             if (!receiptNo || receiptNo.length < 4) return "ใบเสร็จรับเงิน";
-            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+            const months = [
+                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+                "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม",
+                "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+            ];
+
             let yearPart = receiptNo.substring(0, 2);
-            let monthPart = parseInt(receiptNo.substring(2, 4));
-            let targetMonthIdx = monthPart - 2; 
-            let targetYear = parseInt("25" + yearPart);
+            let monthPart = parseInt(receiptNo.substring(2, 4), 10);
+            let targetMonthIdx = monthPart - 2;
+            let targetYear = parseInt("25" + yearPart, 10);
+
             if (targetMonthIdx < 0) {
                 targetMonthIdx = 11;
-                targetYear -= 1; 
+                targetYear -= 1;
             }
+
             return `ประจำเดือน${months[targetMonthIdx]} ${targetYear}`;
         }
 
         async function searchReceipts() {
             const room = inputField.value.trim();
-            if(!room) return;
-            
+            if (!room) return;
+
             resultsArea.innerHTML = `
                 <div style="text-align:center; margin-top:2.5rem;">
                     <div style="width:30px; height:30px; border:3px solid rgba(255,215,0,0.1); border-top:3px solid var(--accent-color); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto;"></div>
                     <p style="color:var(--text-muted); font-size:0.8rem; margin-top:1.2rem;">กำลังเรียกข้อมูล...</p>
-                </div>`;
+                </div>
+            `;
 
             try {
-                const resp = await fetch(`${API_URL}?action=getResidentData&room=${room}`);
+                const resp = await fetch(`${API_URL}?action=getResidentData&room=${encodeURIComponent(room)}`);
                 const data = await resp.json();
 
                 if (!data || data.length === 0) {
                     resultsArea.innerHTML = `
-                        <div style="text-align:center; color:var(--text-muted); padding:2.2rem; background:var(--card-bg); border-radius:20px; border:1px solid var(--glass-border); font-size:0.85rem;">
+                        <div style="text-align:center; color:var(--text-muted); padding:2.2rem; background:rgba(18,22,32,0.58); border-radius:20px; border:1px solid rgba(255,215,0,0.10); font-size:0.85rem; backdrop-filter:blur(12px);">
                             ไม่พบข้อมูลสำหรับห้อง ${room}
-                        </div>`;
+                        </div>
+                    `;
                     return;
                 }
 
                 resultsArea.innerHTML = '<p class="results-label">รายการล่าสุด</p>';
+
                 data.forEach((item, index) => {
                     const div = document.createElement('div');
                     div.className = 'receipt-item';
                     div.style.animationDelay = (index * 0.1) + 's';
-                    
+
                     const displayTitle = formatThaiPeriod(item.receiptNo);
-                    
+
                     div.innerHTML = `
                         <div class="receipt-info">
                             <h4 style="margin:0; font-size:1.05rem; color:var(--accent-color); font-weight:700;">${displayTitle}</h4>
                             <p style="margin: 3px 0 0 0; font-size:0.8rem; color:var(--text-muted); font-family: monospace;">เลขที่: ${item.receiptNo}</p>
                         </div>
                         <div>
-                            ${item.pdfUrl ? 
-                                `<a href="${item.pdfUrl}" target="_blank" class="btn-view-pdf">ดูไฟล์ PDF</a>` : 
-                                `<span style="color:#4b5563; font-size:0.8rem;">รอไฟล์</span>`
+                            ${item.pdfUrl
+                                ? `<a href="${item.pdfUrl}" target="_blank" class="btn-view-pdf">ดูใบเสร็จ</a>`
+                                : `<span style="color:#4b5563; font-size:0.8rem;">รอไฟล์</span>`
                             }
                         </div>
                     `;
+
                     resultsArea.appendChild(div);
                 });
             } catch (e) {
-                resultsArea.innerHTML = `<div style="color:#f87171; text-align:center; font-size:0.85rem;">ระบบขัดข้อง กรุณาลองใหม่</div>`;
+                resultsArea.innerHTML = `
+                    <div style="color:#f87171; text-align:center; font-size:0.85rem;">
+                        ระบบขัดข้อง กรุณาลองใหม่
+                    </div>
+                `;
             }
         }
-    </script>
 
-    <style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
+        window.addEventListener('load', function() {
+            inputField.focus();
+        });
+    </script>
 </body>
 </html>
